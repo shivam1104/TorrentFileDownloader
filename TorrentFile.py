@@ -1,4 +1,4 @@
-import mechanize
+import mechanize,os
 from bs4 import BeautifulSoup
 import sys
 reload(sys)
@@ -42,9 +42,11 @@ for i in h3s:
 	counter+=1
 	print counter,
 	print(i.get_text())
+if(counter==0):
+	print(" \n Wrong Name or not yet uploaded \n \n ")
 
-print "(Any Other Number) for Terminating"
-Choice=input("Input the number of the Movie you wish to download the torrent")
+print "(Press anything) for Terminating"
+Choice=input("\nInput the number of the Movie you wish to download the torrent\n ")
 
 if(Choice>counter):
 	print("Terminating...")
@@ -63,13 +65,39 @@ for a in bs.findAll('a'):
 		temphref=temphref.replace('-',' ')
 		#print(temphref)
 		if( text in temphref):
-			print 'found  url linking..'
+			print '\n found  url linking.. \n '
 			text="https://www.yify-torrent.org"
-			text=text+a['href']
-			print(text)
+			text1=text+a['href']
+			print(text1)
+			textlist=text1.strip().split('/')			
+			MovieNumber=textlist[4]
+			print(" \n Movie Numer found as "+MovieNumber)
+			AlmostLink=text+'/download/torrent-'+MovieNumber+'.html'
+			print(AlmostLink)
+
 			#req = br.click_link(text)
-			a=br.open(text)
-			print(a.read())
+			a=br.open(AlmostLink)
+			content=a.read()
+			bs1=BeautifulSoup(content)
+
+			for b in bs1.findAll('a'):
+				if(b.text=="Download Site1"):
+					text4="https:"
+					FinalTorrent=b['href']
+					FinalTorrent=text4+FinalTorrent					
+					print(FinalTorrent)
+
+					try:
+						TORREENT = br.open_novisit(FinalTorrent)
+					except:
+						print("File removed from Link 1 Going to Link2")
+
+					filename=YifyName+".torrent"
+					with open(filename, 'wb') as f:
+						f.write(TORRENT.read())
+
+					print(FinalTorrent)		
+					os.system(filename)	
 			break
 
 
