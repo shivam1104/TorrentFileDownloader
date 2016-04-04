@@ -36,32 +36,42 @@ PageSource.write(bs.prettify().encode('UTF-8'))
 print("Found These Movies")
 
 h3s=bs.findAll('h3')
+
 counter=0
 for i in h3s:
 	counter+=1
 	print counter,
 	print(i.get_text())
 
+print "(Any Other Number) for Terminating"
+Choice=input("Input the number of the Movie you wish to download the torrent")
+
+if(Choice>counter):
+	print("Terminating...")
+	sys.exit()
+
+Choice-=1
+text=h3s[Choice].get_text()
+text=text.replace('(','')
+text=text.replace(')','')
+text=text.lower()
+print " \n ", text ," \n" 
+
+for a in bs.findAll('a'):
+	if ( a.has_attr('href')):
+		temphref=a['href'].strip()	
+		temphref=temphref.replace('-',' ')
+		#print(temphref)
+		if( text in temphref):
+			print 'found  url linking..'
+			text="https://www.yify-torrent.org"
+			text=text+a['href']
+			print(text)
+			#req = br.click_link(text)
+			a=br.open(text)
+			print(a.read())
+			break
 
 
-'''
-for form in br.forms():
-    if form.attrs['id'] == 'searchform':
-        br.form = form
-        break
 
-br.form['k']="Terminator"
-a=br.submit()
-
-f=open("TempFile.txt","w")
-
-
-f1=open("TempFile1.txt","w")
-content=a.read()
-f1.write(content)
-
-response1=br.response().read()
-f.write(response1)
-'''
-
-
+	
