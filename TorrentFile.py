@@ -6,7 +6,7 @@ sys.setdefaultencoding('utf-8')
 
 
 
-YifyName=raw_input("Enter the movie you wish to download")
+YifyName=raw_input("Enter the movie you wish to download  or a Genre \n")
 String1="https://www.yify-torrent.org/search/"
 MovieLink=String1+YifyName+'/'
 print MovieLink
@@ -40,13 +40,15 @@ h3s=bs.findAll('h3')
 counter=0
 for i in h3s:
 	counter+=1
-	print counter,
+	print("\n")
+	print counter,"......",
 	print(i.get_text())
+
 if(counter==0):
 	print(" \n Wrong Name or not yet uploaded \n \n ")
 
 print "(Press anything) for Terminating"
-Choice=input("\nInput the number of the Movie you wish to download the torrent\n ")
+Choice=input("\nInput the number of the Movie you wish to download the torrent \n ")
 
 if(Choice>counter):
 	print("Terminating...")
@@ -86,19 +88,57 @@ for a in bs.findAll('a'):
 					FinalTorrent=b['href']
 					FinalTorrent=text4+FinalTorrent					
 					print(FinalTorrent)
+					
 
 					try:
-						TORREENT = br.open_novisit(FinalTorrent)
+						TORRENT = br.open_novisit(FinalTorrent)
 					except:
-						print("File removed from Link 1 Going to Link2")
-
+						print("File removed from Link 1 Going to Link2, Breaking...")
+						break
+					#print("After Except")		
 					filename=YifyName+".torrent"
 					with open(filename, 'wb') as f:
-						f.write(TORRENT.read())
+						try:
+							f.write(TORRENT.read())
+						except:
+							print "rehenedo"
+							sys.exit()
+						
 
 					print(FinalTorrent)		
 					os.system(filename)	
+					sys.exit()
+				print("exited if")
+
+
+			for b in bs1.findAll('a'):
+				if(b.text=="Download Site2"):
+					print("Found site2")
+					text4="https:"
+					FinalTorrent=b['href']
+					FinalTorrent=text4+FinalTorrent					
+					print(FinalTorrent)
+					#TORREENT=""
+					try:
+						TORRENT = br.open_novisit(FinalTorrent)
+					except:
+						print("File removed from Link 2 also TERMINATING! Curse YIFY NOT ME :P \n ")
+						sys.exit()
+						break
+
+					filename=YifyName+".torrent"
+					with open(filename, 'wb') as f:
+						try:
+							f.write(TORRENT.read())
+						except:
+							print "rehenedo"
+							sys.exit()
+					print(FinalTorrent)		
+					os.system(filename)	
+					sys.exit()
+			
 			break
+
 
 
 
